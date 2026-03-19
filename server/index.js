@@ -1,4 +1,3 @@
- 
 var express = require("express");
 var mongoose = require("mongoose");
 var cors = require("cors");
@@ -10,6 +9,11 @@ var app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// test route
+app.get("/", function(req, res) {
+  res.json({ message: "Server is running!" });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(function() {

@@ -24,9 +24,9 @@ var forgotPassword = async function(req, res) {
   var resetLink = process.env.CLIENT_URL + "/reset-password/" + token;
 
   var transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS

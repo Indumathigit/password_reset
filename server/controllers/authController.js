@@ -1,7 +1,9 @@
 var crypto = require("crypto");
 var bcrypt = require("bcryptjs");
-var nodemailer = require("nodemailer");
+var { Resend } = require("resend");
 var User = require("../models/User");
+
+var resend = new Resend(process.env.RESEND_API_KEY);
 
 var forgotPassword = async function(req, res) {
   var email = req.body.email;
@@ -23,18 +25,8 @@ var forgotPassword = async function(req, res) {
 
   var resetLink = process.env.CLIENT_URL + "/reset-password/" + token;
 
-  var transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+  await resend.emails.send({
+    from: "onboarding@resend.dev",
     to: email,
     subject: "Reset Your Password",
     html: "<p>Click the link below to reset your password.</p><a href='" + resetLink + "'>" + resetLink + "</a><p>This link expires in 1 hour.</p>"

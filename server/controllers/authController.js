@@ -24,12 +24,14 @@ var forgotPassword = async function(req, res) {
   var resetLink = process.env.CLIENT_URL + "/reset-password/" + token;
 
   var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
   await transporter.sendMail({
     from: process.env.EMAIL_USER,

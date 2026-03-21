@@ -69,6 +69,7 @@ var login = async function(req, res) {
 
 var forgotPassword = async function(req, res) {
   var email = req.body.email;
+  console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
 
   var user = await User.findOne({ email: email });
   if (!user) {

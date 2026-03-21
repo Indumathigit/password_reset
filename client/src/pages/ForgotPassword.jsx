@@ -39,10 +39,13 @@ function ForgotPassword() {
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition duration-200"
             disabled={loading}
           >
-            {loading ? "Sending.." : "Send Reset Link"}
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
         {message && <p className="mt-4 text-green-600 text-sm">{message}</p>}
+        <p className="mt-4 text-sm text-gray-600">
+          <a href="/login" className="text-blue-500 hover:underline">Back to Login</a>
+        </p>
       </div>
     </div>
   );

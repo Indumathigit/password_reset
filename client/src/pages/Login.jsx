@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 function Login() {
   var [email, setEmail] = useState("");
   var [password, setPassword] = useState("");
   var [message, setMessage] = useState("");
   var [loading, setLoading] = useState(false);
-
-  var navigate = useNavigate();
 
   var handleSubmit = async function(e) {
     e.preventDefault();

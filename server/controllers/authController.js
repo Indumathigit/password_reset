@@ -1,3 +1,47 @@
+// register new user
+var register = async function(req, res) {
+  var email = req.body.email;
+  var password = req.body.password;
+
+  // check if user already exists
+  var existingUser = await User.findOne({ email: email });
+  if (existingUser) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  // hash password
+  var hashed = await bcrypt.hash(password, 10);
+
+  // save new user
+  var newUser = new User({
+    email: email,
+    password: hashed
+  });
+  await newUser.save();
+
+  res.json({ message: "Registration successful!" });
+};
+
+
+var login = async function(req, res) {
+  var email = req.body.email;
+  var password = req.body.password;
+
+  // check if user exists
+  var user = await User.findOne({ email: email });
+  if (!user) {
+    return res.status(404).json({ message: "No account found with this email" });
+  }
+
+
+  var isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: "Incorrect password" });
+  }
+
+  res.json({ message: "Login successful!" });
+};
+
 var crypto = require("crypto");
 var bcrypt = require("bcryptjs");
 var { Resend } = require("resend");
@@ -59,5 +103,4 @@ var resetPassword = async function(req, res) {
 
   res.json({ message: "Password updated successfully!" });
 };
-
-module.exports = { forgotPassword, resetPassword };
+module.exports = { register, login, forgotPassword, resetPassword };

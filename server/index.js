@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
 var cors = require("cors");
 require("dotenv").config();
 
+console.log("EMAIL_USER:", process.env.EMAIL_USER); // add this
 var authRoutes = require("./routes/auth");
 
 var app = express();

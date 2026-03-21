@@ -15,6 +15,10 @@ function ForgotPassword() {
       body: JSON.stringify({ email: email })
     });
 
+
+
+    
+
     var data = await res.json();
     setMessage(data.message);
     setLoading(false);

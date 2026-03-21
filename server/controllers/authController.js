@@ -3,6 +3,33 @@ var bcrypt = require("bcryptjs");
 var nodemailer = require("nodemailer");
 var User = require("../models/User");
 
+var sendResetEmail = async function(email, resetLink) {
+  if (process.env.RESEND_API_KEY) {
+    var { Resend } = require("resend");
+    var resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "Reset Your Password",
+      html: "<p>Click the link below to reset your password.</p><a href='" + resetLink + "'>" + resetLink + "</a><p>This link expires in 1 hour.</p>"
+    });
+  } else {
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Reset Your Password",
+      html: "<p>Click the link below to reset your password.</p><a href='" + resetLink + "'>" + resetLink + "</a><p>This link expires in 1 hour.</p>"
+    });
+  }
+};
+
 var register = async function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
@@ -59,20 +86,7 @@ var forgotPassword = async function(req, res) {
 
   var resetLink = process.env.CLIENT_URL + "/reset-password/" + token;
 
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Reset Your Password",
-    html: "<p>Click the link below to reset your password.</p><a href='" + resetLink + "'>" + resetLink + "</a><p>This link expires in 1 hour.</p>"
-  });
+  await sendResetEmail(email, resetLink);
 
   res.json({ message: "Reset link sent to your email!" });
 };
